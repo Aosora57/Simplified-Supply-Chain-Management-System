@@ -114,7 +114,7 @@ contract ProductRegistry {
         product.statusChangeHistory.push(StatusInfo({
             status: Status.Produced,
             timestamp: block.timestamp,
-            remark: "产品创建",
+            remark: "Product produced",
             updater: msg.sender
         }));
         emit ProductAdded(_id, _name, msg.sender);
@@ -188,11 +188,11 @@ contract ProductRegistry {
         products[_id].statusChangeHistory.push(StatusInfo({
             status: Status.Ordered,
             timestamp: block.timestamp,
-            remark: "产品已下单",
+            remark: "Product has been ordered",
             updater: msg.sender
         }));
         emit ProductBought(_id, msg.sender);
-        emit StatusUpdated(_id, Status.Ordered, "产品已下单", msg.sender);
+        emit StatusUpdated(_id, Status.Ordered, "Product has been ordered", msg.sender);
     }
 
     // 转移 owner 权限
