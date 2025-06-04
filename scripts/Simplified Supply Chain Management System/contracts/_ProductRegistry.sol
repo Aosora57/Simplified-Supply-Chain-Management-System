@@ -127,22 +127,19 @@ contract ProductRegistry {
         emit ProductAdded(_id, _name, msg.sender);
     }
 
-    // Update status (Transporter or Buyer)
-    function updateStatus(uint _id, Status _status, string calldata _remark) external {
+   // Ship product (Transporter only)
+    function shipProduct(uint _id, string calldata _remark) external onlyRole(Role.Transporter) {
         require(products[_id].id != 0, "Product does not exist");
-        require(uint(_status) == uint(products[_id].currentStatus) + 1, "Invalid status transition");
-        require(_status == Status.Shipped, "Use receiveProduct for Delivered status");
+        require(products[_id].currentStatus == Status.Ordered, "Product must be in Ordered status");
 
-        require(roles[msg.sender].role == Role.Transporter, "Unauthorized: Must be Transporter");
-
-        products[_id].currentStatus = _status;
+        products[_id].currentStatus = Status.Shipped;
         products[_id].statusChangeHistory.push(StatusInfo({
-            status: _status,
+            status: Status.Shipped,
             timestamp: block.timestamp,
             remark: _remark,
             updater: msg.sender
         }));
-        emit StatusUpdated(_id, _status, _remark, msg.sender);
+        emit StatusUpdated(_id, Status.Shipped, _remark, msg.sender);
     }
 
     // Receive product (Buyer only)
